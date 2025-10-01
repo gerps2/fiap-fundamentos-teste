@@ -1,0 +1,93 @@
+name: CI - Testes e Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Testes e Coverage
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Instalar dependências
+      run: npm ci
+
+    - name: Executar testes
+      run: npm test -- --ci --coverage --maxWorkers=2
+
+    - name: Verificar coverage mínimo
+      run: npm run test:coverage -- --ci --maxWorkers=2
+
+    - name: Upload coverage para Codecov (opcional)
+      if: matrix.node-version == '20.x'
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  build:
+    name: Build da Aplicação
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Instalar dependências
+      run: npm ci
+
+    - name: Build da aplicação
+      run: npm run build
+
+    - name: Verificar se build foi criado
+      run: |
+        if [ ! -d "dist" ]; then
+          echo "Erro: Diretório dist não foi criado"
+          exit 1
+        fi
+        echo "Build criado com sucesso!"
+
+  lint:
+    name: Verificar Qualidade do Código
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Instalar dependências
+      run: npm ci
+
+    - name: Verificar TypeScript
+      run: npx tsc --noEmit

@@ -1,0 +1,30 @@
+.filtro-tarefas {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.filtro-tarefas__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filtro-tarefas__header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.filtro-tarefas__buttons {
+  margin-top: 1rem;
+}
+
+.filtro-tarefas__buttons button {
+  font-weight: 600;
+  text-transform: none;
+  padding: 0.75rem;
+}

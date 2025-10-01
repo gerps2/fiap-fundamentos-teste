@@ -1,0 +1,29 @@
+.pagina-inicio {
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+.pagina-inicio__header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.pagina-inicio__header h1 {
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+
+.pagina-inicio__header .MuiTypography-subtitle1 {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .pagina-inicio {
+    padding: 1rem 0.5rem;
+  }
+
+  .pagina-inicio__header h1 {
+    font-size: 2rem;
+  }
+}
