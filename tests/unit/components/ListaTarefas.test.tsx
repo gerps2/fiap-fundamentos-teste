@@ -1,7 +1,7 @@
-import { render, screen } from '../../tests/testUtils'
+import { render, screen } from '../../testUtils'
 import userEvent from '@testing-library/user-event'
-import { ListaTarefas } from './ListaTarefas'
-import { Tarefa } from '../../types/tarefa'
+import { ListaTarefas } from '../../../src/components/secoes/ListaTarefas/ListaTarefas'
+import { Tarefa } from '../../../src/types/tarefa'
 
 describe('ListaTarefas', () => {
   const tarefasMock: Tarefa[] = [
@@ -246,7 +246,6 @@ describe('ListaTarefas', () => {
         />
       )
 
-      // Verifica se os itens foram renderizados (React usa keys internamente)
       const items = screen.getAllByTestId('item-tarefa')
       expect(items).toHaveLength(3)
     })

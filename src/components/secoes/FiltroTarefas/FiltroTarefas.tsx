@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Button, Chip, Typography } from '@mui/material'
-import { TipoFiltro } from '../../types/tarefa'
+import { TipoFiltro } from '../../../types/tarefa'
 import './FiltroTarefas.css'
 
 interface FiltroTarefasProps {

@@ -1,7 +1,7 @@
 import { Container, Typography, Box, Divider } from '@mui/material'
-import { FormularioTarefa } from '../../components/FormularioTarefa/FormularioTarefa'
-import { FiltroTarefas } from '../../components/FiltroTarefas/FiltroTarefas'
-import { ListaTarefas } from '../../components/ListaTarefas/ListaTarefas'
+import { FormularioTarefa } from '../../components/secoes/FormularioTarefa/FormularioTarefa'
+import { FiltroTarefas } from '../../components/secoes/FiltroTarefas/FiltroTarefas'
+import { ListaTarefas } from '../../components/secoes/ListaTarefas/ListaTarefas'
 import { useTarefas } from '../../hooks/useTarefas'
 import './Inicio.css'
 

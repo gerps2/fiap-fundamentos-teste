@@ -1,7 +1,7 @@
-import { render, screen } from '../../tests/testUtils'
+import { render, screen } from '../../testUtils'
 import userEvent from '@testing-library/user-event'
-import { ItemTarefa } from './ItemTarefa'
-import { Tarefa } from '../../types/tarefa'
+import { ItemTarefa } from '../../../src/components/compostos/ItemTarefa/ItemTarefa'
+import { Tarefa } from '../../../src/types/tarefa'
 
 describe('ItemTarefa', () => {
   const tarefaMock: Tarefa = {

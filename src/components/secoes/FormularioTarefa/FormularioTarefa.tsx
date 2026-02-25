@@ -11,8 +11,8 @@ import {
   Typography,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { NovaTarefa, Prioridade } from '../../types/tarefa'
-import { validarTarefa } from '../../utils/tarefaHelpers'
+import { NovaTarefa, Prioridade } from '../../../types/tarefa'
+import { validarTarefa } from '../../../utils/tarefaHelpers'
 import './FormularioTarefa.css'
 
 interface FormularioTarefaProps {

@@ -1,6 +1,6 @@
-import { render, screen } from '../../tests/testUtils'
+import { render, screen } from '../../testUtils'
 import userEvent from '@testing-library/user-event'
-import { FormularioTarefa } from './FormularioTarefa'
+import { FormularioTarefa } from '../../../src/components/secoes/FormularioTarefa/FormularioTarefa'
 
 describe('FormularioTarefa', () => {
   const mockOnAdicionar = jest.fn()
@@ -194,11 +194,9 @@ describe('FormularioTarefa', () => {
       const inputDescricao = screen.getByTestId('input-descricao').querySelector('textarea')!
       const botao = screen.getByTestId('botao-adicionar')
 
-      // Primeiro submit com erro
       await user.click(botao)
       expect(await screen.findByTestId('mensagem-erro')).toBeInTheDocument()
 
-      // Segundo submit com sucesso
       await user.type(inputTitulo, 'Tarefa Teste')
       await user.type(inputDescricao, 'Descrição Teste')
       await user.click(botao)
