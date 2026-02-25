@@ -1,93 +1,148 @@
-name: CI - Testes e Build
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  test:
-    name: Testes e Coverage
+  # ─── Lint / TypeScript ───────────────────────────────────────────────────────
+  lint:
+    name: TypeScript Check
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Verificar TypeScript
+        run: npx tsc --noEmit
 
+  # ─── Testes Unitários (Node 18 e 20) ─────────────────────────────────────────
+  testes-unitarios:
+    name: Testes Unitários (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
-
+        node: ['18.x', '20.x']
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Rodar testes unitários
+        run: npm run test:unit -- --ci --maxWorkers=2
 
-    - name: Configurar Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+  # ─── Testes de Integração ────────────────────────────────────────────────────
+  testes-integracao:
+    name: Testes de Integração
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Rodar testes de integração
+        run: npm run test:integration -- --ci --maxWorkers=2
 
-    - name: Instalar dependências
-      run: npm ci
+  # ─── Testes E2E (Testing Library) ────────────────────────────────────────────
+  testes-e2e:
+    name: Testes E2E (Testing Library)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Rodar testes E2E
+        run: npm run test:e2e -- --ci --maxWorkers=2
 
-    - name: Executar testes
-      run: npm test -- --ci --coverage --maxWorkers=2
+  # ─── Testes de Usabilidade (jest-axe) ────────────────────────────────────────
+  testes-usabilidade:
+    name: Testes de Usabilidade / Acessibilidade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Rodar testes de acessibilidade
+        run: npm run test:usability -- --ci
 
-    - name: Verificar coverage mínimo
-      run: npm run test:coverage -- --ci --maxWorkers=2
+  # ─── Coverage ≥ 80% ──────────────────────────────────────────────────────────
+  coverage:
+    name: Coverage (≥ 80%)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Verificar cobertura mínima
+        run: npm run test:coverage -- --ci --maxWorkers=2
+      - name: Upload para Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Upload coverage para Codecov (opcional)
-      if: matrix.node-version == '20.x'
-      uses: codecov/codecov-action@v3
-      with:
-        files: ./coverage/lcov.info
-        flags: unittests
-        name: codecov-umbrella
-        fail_ci_if_error: false
+  # ─── Cucumber + Playwright ───────────────────────────────────────────────────
+  cucumber:
+    name: Cucumber E2E (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Instalar browser Chromium
+        run: npx playwright install chromium --with-deps
+      - name: Rodar testes Cucumber
+        run: npm run test:cucumber
+      - name: Upload relatório HTML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: tests/cucumber/reports/report.html
 
+  # ─── Build ───────────────────────────────────────────────────────────────────
   build:
-    name: Build da Aplicação
+    name: Build de Produção
     runs-on: ubuntu-latest
-    needs: test
-
+    needs: [lint, testes-unitarios]
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v4
-
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Instalar dependências
-      run: npm ci
-
-    - name: Build da aplicação
-      run: npm run build
-
-    - name: Verificar se build foi criado
-      run: |
-        if [ ! -d "dist" ]; then
-          echo "Erro: Diretório dist não foi criado"
-          exit 1
-        fi
-        echo "Build criado com sucesso!"
-
-  lint:
-    name: Verificar Qualidade do Código
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout do código
-      uses: actions/checkout@v4
-
-    - name: Configurar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Instalar dependências
-      run: npm ci
-
-    - name: Verificar TypeScript
-      run: npx tsc --noEmit
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: npm
+      - run: npm ci
+      - name: Build da aplicação
+        run: npm run build
+      - name: Verificar artefatos do build
+        run: |
+          test -d dist && echo "Build OK" || (echo "Build falhou: dist/ não existe" && exit 1)
+      - name: Upload do build
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7

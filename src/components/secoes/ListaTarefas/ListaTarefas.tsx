@@ -1,6 +1,6 @@
 import { Box, Typography, List } from '@mui/material'
-import { Tarefa } from '../../types/tarefa'
-import { ItemTarefa } from '../ItemTarefa/ItemTarefa'
+import { Tarefa } from '../../../types/tarefa'
+import { ItemTarefa } from '../../compostos/ItemTarefa/ItemTarefa'
 import './ListaTarefas.css'
 
 interface ListaTarefasProps {

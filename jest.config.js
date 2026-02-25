@@ -1,8 +1,8 @@
 export default {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  roots: ['<rootDir>/src'],
-  setupFilesAfterEnv: ['<rootDir>/src/tests/setup.ts'],
+  roots: ['<rootDir>/src', '<rootDir>/tests'],
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
@@ -21,13 +21,18 @@ export default {
     },
   },
   testMatch: [
-    '**/__tests__/**/*.{ts,tsx}',
-    '**/*.{spec,test}.{ts,tsx}',
+    '<rootDir>/tests/**/*.{spec,test}.{ts,tsx}',
+    '<rootDir>/src/**/*.{spec,test}.{ts,tsx}',
   ],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/tests/cucumber/'],
+  testTimeout: 15000,
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
       tsconfig: {
         jsx: 'react-jsx',
+        moduleResolution: 'node',
+        module: 'commonjs',
+        allowImportingTsExtensions: false,
       },
     }],
   },

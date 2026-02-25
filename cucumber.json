@@ -1,0 +1,16 @@
+{
+  "default": {
+    "paths": ["tests/cucumber/features/**/*.feature"],
+    "import": ["tests/cucumber/support/hooks.ts", "tests/cucumber/steps/**/*.steps.ts"],
+    "loader": ["ts-node/esm"],
+    "format": ["progress", "html:tests/cucumber/reports/report.html"],
+    "formatOptions": { "snippetInterface": "async-await" }
+  },
+  "headed": {
+    "paths": ["tests/cucumber/features/**/*.feature"],
+    "import": ["tests/cucumber/support/hooks.ts", "tests/cucumber/steps/**/*.steps.ts"],
+    "loader": ["ts-node/esm"],
+    "format": ["@cucumber/pretty-formatter"],
+    "formatOptions": { "snippetInterface": "async-await" }
+  }
+}

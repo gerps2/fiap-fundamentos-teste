@@ -8,8 +8,8 @@ import {
   Box,
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Tarefa } from '../../types/tarefa'
-import { formatarData } from '../../utils/tarefaHelpers'
+import { Tarefa } from '../../../types/tarefa'
+import { formatarData } from '../../../utils/tarefaHelpers'
 import './ItemTarefa.css'
 
 interface ItemTarefaProps {

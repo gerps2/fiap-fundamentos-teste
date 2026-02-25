@@ -1,6 +1,6 @@
-import { render, screen } from '../../tests/testUtils'
+import { render, screen } from '../../testUtils'
 import userEvent from '@testing-library/user-event'
-import { FiltroTarefas } from './FiltroTarefas'
+import { FiltroTarefas } from '../../../src/components/secoes/FiltroTarefas/FiltroTarefas'
 
 describe('FiltroTarefas', () => {
   const mockOnAlterarFiltro = jest.fn()
